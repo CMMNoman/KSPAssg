@@ -72,7 +72,7 @@ stages:
                   WebsitePhysicalPath: '%SystemDrive%\inetpub\wwwroot\KSPAssgProd'
                   WebsitePhysicalPathAuth: 'WebsiteUserPassThrough'
                   AddBinding: true
-                  Bindings: 'http/All Unassigned:81:'
+                  Bindings: '{"bindings":[{"protocol":"http","ipAddress":"All Unassigned","port":"81","hostname":"","sslThumbprint":"","sniFlag":false}]}'
               - task: IISWebAppDeploymentOnMachineGroup@0
                 inputs:
                   WebSiteName: 'KSPAssg Production'
