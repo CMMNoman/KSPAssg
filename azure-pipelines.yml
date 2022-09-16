@@ -15,8 +15,8 @@ variables:
   osImage: 'windows-latest'
 
 stages:
-  - stage: 'Production_Stage'
-    displayName: 'Production Release'
+  - stage: 'Build Stage'
+    displayName: 'Build Stage'
     jobs:
       - job: 'build'
         pool: 
@@ -45,14 +45,21 @@ stages:
               PathtoPublish: '$(Build.ArtifactStagingDirectory)'
               ArtifactName: 'drop'
               publishLocation: 'Container'
-          - task: IISWebAppManagementOnMachineGroup@0
+
+  - stage: 'Development_Stage'
+    # dependsOn: test_stage
+    displayName: 'Dev Deployment'
+    jobs:
+      - deployment: dev_agent
+        environment: dev
+        # dependsOn: build_stage
+        pool:
+         vmImage: 'windows-latest'
+         steps:
+          - task: DownloadBuildArtifacts@1
             inputs:
-              IISDeploymentType: 'IISWebsite'
-              ActionIISWebsite: 'CreateOrUpdateWebsite'
-              WebsiteName: 'KSPAssg Production'
-              WebsitePhysicalPath: '%SystemDrive%\inetpub\wwwroot\KSPAssgProd'
-              WebsitePhysicalPathAuth: 'WebsiteUserPassThrough'
-          - task: IISWebAppDeploymentOnMachineGroup@0
-            inputs:
-              WebSiteName: 'KSPAssg Production'
-              Package: '$(System.DefaultWorkingDirectory)\**\*.zip'
+              buildType: 'current'
+              downloadType: 'single'
+              artifactName: 'drop'
+              downloadPath: '$(System.ArtifactStagingDirectory)'
+          
