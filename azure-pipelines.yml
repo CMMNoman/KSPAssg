@@ -47,12 +47,11 @@ stages:
               publishLocation: 'Container'
 
   - stage: 'Development_Stage'
-    # dependsOn: test_stage
     displayName: 'Dev Deployment'
     jobs:
       - deployment: dev_agent
         environment: dev
-        # dependsOn: build_stage
+        dependsOn: Build_Stage
         pool:
          vmImage: 'windows-latest'
          steps:
