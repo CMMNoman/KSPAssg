@@ -43,4 +43,14 @@ stages:
             PathtoPublish: '$(Build.ArtifactStagingDirectory)'
             ArtifactName: 'drop'
             publishLocation: 'Container'
-        
+        - task: IISWebAppManagementOnMachineGroup@0
+          inputs:
+            IISDeploymentType: 'IISWebsite'
+            ActionIISWebsite: 'CreateOrUpdateWebsite'
+            WebsiteName: 'KSPAssg Production'
+            WebsitePhysicalPath: '%SystemDrive%\inetpub\wwwroot\KSPAssgProd'
+            WebsitePhysicalPathAuth: 'WebsiteUserPassThrough'
+        - task: IISWebAppDeploymentOnMachineGroup@0
+          inputs:
+            WebSiteName: 'KSPAssg Production'
+            Package: '$(System.DefaultWorkingDirectory)\**\*.zip'
