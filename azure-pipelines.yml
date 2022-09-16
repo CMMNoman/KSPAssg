@@ -15,7 +15,7 @@ variables:
   osImage: 'windows-latest'
 
 stages:
-  - stage: 'Build Stage'
+  - stage: 'Build_Stage'
     displayName: 'Build Stage'
     jobs:
       - job: 'build'
