@@ -58,6 +58,12 @@ stages:
          runOnce:
           deploy:
             steps:
+              - task: DownloadBuildArtifacts@1
+                inputs:
+                  buildType: 'current'
+                  downloadType: 'single'
+                  artifactName: 'drop'
+                  downloadPath: '$(System.ArtifactStagingDirectory)'
               - task: IISWebAppManagementOnMachineGroup@0
                 inputs:
                   IISDeploymentType: 'IISWebsite'
