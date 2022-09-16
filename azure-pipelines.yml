@@ -51,24 +51,24 @@ stages:
       - deployment: dev_agent
         pool:
           vmImage: 'windows-latest'
-        environment: 
-         name: dev
-         resourceType: VirtualMachine
-        strategy:
-         runOnce:
-          deploy:
-            steps:
-              - task: DownloadBuildArtifacts@1
-                inputs:
-                  buildType: 'current'
-                  downloadType: 'single'
-                  artifactName: 'drop'
-                  downloadPath: '$(System.ArtifactStagingDirectory)'
-              - task: CopyFiles@2
-                inputs:
-                  SourceFolder: '$(System.ArtifactStagingDirectory)'
-                  Contents: '**'
-                  TargetFolder: '%SystemDrive%\inetpub\wwwroot\KSPAssgProd'
-                  CleanTargetFolder: true
-                  OverWrite: true
+          environment: 
+          name: dev
+          resourceType: VirtualMachine
+          strategy:
+          runOnce:
+            deploy:
+              steps:
+                - task: DownloadBuildArtifacts@1
+                  inputs:
+                    buildType: 'current'
+                    downloadType: 'single'
+                    artifactName: 'drop'
+                    downloadPath: '$(System.ArtifactStagingDirectory)'
+                - task: CopyFiles@2
+                  inputs:
+                    SourceFolder: '$(System.ArtifactStagingDirectory)'
+                    Contents: '**'
+                    TargetFolder: '%SystemDrive%\inetpub\wwwroot\KSPAssgProd'
+                    CleanTargetFolder: true
+                    OverWrite: true
           
