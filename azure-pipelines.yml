@@ -69,7 +69,7 @@ stages:
                   IISDeploymentType: 'IISWebsite'
                   ActionIISWebsite: 'CreateOrUpdateWebsite'
                   WebsiteName: 'KSPAssg Production'
-                  WebsitePhysicalPath: '%SystemDrive%\inetpub\wwwroot\KSPAssgProd'
+                  WebsitePhysicalPath: '%SystemDrive%\inetpub\wwwroot\KSPAssgDev'
                   WebsitePhysicalPathAuth: 'WebsiteUserPassThrough'
                   AddBinding: true
                   Bindings: '{"bindings":[{"protocol":"http","ipAddress":"All Unassigned","port":"81","hostname":"","sslThumbprint":"","sniFlag":false}]}'
@@ -77,4 +77,71 @@ stages:
                 inputs:
                   WebSiteName: 'KSPAssg Production'
                   Package: '$(System.DefaultWorkingDirectory)\**\*.zip'
-          
+
+  - stage: 'Staging_Stage'
+    dependsOn: Build_Stage
+    displayName: 'Staging Deployment'
+    pool: 
+      vmImage: 'windows-latest'
+    jobs:
+      - deployment: staging_agent
+        environment: 
+         name: staging
+         resourceType: VirtualMachine
+        strategy:
+         runOnce:
+          deploy:
+            steps:
+              - task: DownloadBuildArtifacts@1
+                inputs:
+                  buildType: 'current'
+                  downloadType: 'single'
+                  artifactName: 'drop'
+                  downloadPath: '$(System.ArtifactStagingDirectory)'
+              - task: IISWebAppManagementOnMachineGroup@0
+                inputs:
+                  IISDeploymentType: 'IISWebsite'
+                  ActionIISWebsite: 'CreateOrUpdateWebsite'
+                  WebsiteName: 'KSPAssg Production'
+                  WebsitePhysicalPath: '%SystemDrive%\inetpub\wwwroot\KSPAssgStaging'
+                  WebsitePhysicalPathAuth: 'WebsiteUserPassThrough'
+                  AddBinding: true
+                  Bindings: '{"bindings":[{"protocol":"http","ipAddress":"All Unassigned","port":"82","hostname":"","sslThumbprint":"","sniFlag":false}]}'
+              - task: IISWebAppDeploymentOnMachineGroup@0
+                inputs:
+                  WebSiteName: 'KSPAssg Production'
+                  Package: '$(System.DefaultWorkingDirectory)\**\*.zip'
+
+  - stage: 'Production_Stage'
+    dependsOn: Build_Stage
+    displayName: 'Production Deployment'
+    pool: 
+      vmImage: 'windows-latest'
+    jobs:
+      - deployment: production_agent
+        environment: 
+         name: production
+         resourceType: VirtualMachine
+        strategy:
+         runOnce:
+          deploy:
+            steps:
+              - task: DownloadBuildArtifacts@1
+                inputs:
+                  buildType: 'current'
+                  downloadType: 'single'
+                  artifactName: 'drop'
+                  downloadPath: '$(System.ArtifactStagingDirectory)'
+              - task: IISWebAppManagementOnMachineGroup@0
+                inputs:
+                  IISDeploymentType: 'IISWebsite'
+                  ActionIISWebsite: 'CreateOrUpdateWebsite'
+                  WebsiteName: 'KSPAssg Production'
+                  WebsitePhysicalPath: '%SystemDrive%\inetpub\wwwroot\KSPAssgProd'
+                  WebsitePhysicalPathAuth: 'WebsiteUserPassThrough'
+                  AddBinding: true
+                  Bindings: '{"bindings":[{"protocol":"http","ipAddress":"All Unassigned","port":"83","hostname":"","sslThumbprint":"","sniFlag":false}]}'
+              - task: IISWebAppDeploymentOnMachineGroup@0
+                inputs:
+                  WebSiteName: 'KSPAssg Production'
+                  Package: '$(System.DefaultWorkingDirectory)\**\*.zip'
