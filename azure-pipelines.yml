@@ -68,9 +68,9 @@ stages:
                   AddBinding: true
                   Bindings: '{"bindings":[{"protocol":"http","ipAddress":"All Unassigned","port":"81","hostname":"","sslThumbprint":"","sniFlag":false}]}'
               - task: IISWebAppDeploymentOnMachineGroup@0
-                displayName: 'IIS Web App Deploy'
                 inputs:
-                  WebsiteName: 'KSPAssg Production'
-                  TakeAppOfflineFlag: True
-                  XmlVariableSubstitution: True
+                  WebSiteName: 'KSPAssg Production'
+                  Package: '$(System.DefaultWorkingDirectory)/**/**/*.zip'
+                  TakeAppOfflineFlag: true
+                  XmlVariableSubstitution: true
           
