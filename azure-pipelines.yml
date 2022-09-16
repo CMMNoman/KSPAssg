@@ -59,18 +59,11 @@ stages:
               downloadType: 'single'
               artifactName: 'drop'
               downloadPath: '$(System.ArtifactStagingDirectory)'
-          - task: IISWebAppManagementOnMachineGroup@0
+          - task: CopyFiles@2
             inputs:
-              IISDeploymentType: 'IISWebsite'
-              ActionIISWebsite: 'CreateOrUpdateWebsite'
-              WebsiteName: 'KSPAssg Production'
-              WebsitePhysicalPath: '%SystemDrive%\inetpub\wwwroot\KSPAssgProd'
-              WebsitePhysicalPathAuth: 'WebsiteUserPassThrough'
-              AddBinding: true
-              Bindings: 'http/All Unassigned:81:'
-          - task: IISWebAppDeploymentOnMachineGroup@0
-            inputs:
-              WebSiteName: 'KSPAssg Production'
-              Package: '$(System.DefaultWorkingDirectory)\**\*.zip'
-              TakeAppOfflineFlag: true
-              XmlVariableSubstitution: true
+              SourceFolder: '$(System.ArtifactStagingDirectory)'
+              Contents: '**'
+              TargetFolder: '%SystemDrive%\inetpub\wwwroot\KSPAssgProd'
+              CleanTargetFolder: true
+              OverWrite: true
+          
