@@ -49,14 +49,14 @@ stages:
     displayName: 'Dev Deployment'
     jobs:
       - deployment: dev_agent
+        pool:
+          vmImage: 'windows-latest'
         environment: 
          name: dev
          resourceType: VirtualMachine
         strategy:
          runOnce:
           deploy:
-           pool:
-            vmImage: 'windows-latest'
             steps:
               - task: DownloadBuildArtifacts@1
                 inputs:
