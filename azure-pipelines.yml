@@ -12,7 +12,7 @@ trigger:
 
 variables:
   buildConfiguration: 'Release'
-  osImage: 'windows-latest'
+  osWindowsImage: 'windows-latest'
 
 stages:
   - stage: 'Build_Stage'
@@ -48,7 +48,7 @@ stages:
     dependsOn: Build_Stage
     displayName: 'Dev Deployment'
     pool: 
-      vmImage: 'windows-latest'
+      vmImage: $(osWindowsImage)
     jobs:
       - deployment: dev_agent
         environment: 
@@ -82,7 +82,7 @@ stages:
     dependsOn: Build_Stage
     displayName: 'Staging Deployment'
     pool: 
-      vmImage: 'windows-latest'
+      vmImage: $(osWindowsImage)
     jobs:
       - deployment: staging_agent
         environment: 
@@ -116,7 +116,7 @@ stages:
     dependsOn: Build_Stage
     displayName: 'Production Deployment'
     pool: 
-      vmImage: 'windows-latest'
+      vmImage: $(osWindowsImage)
     jobs:
       - deployment: production_agent
         environment: 
